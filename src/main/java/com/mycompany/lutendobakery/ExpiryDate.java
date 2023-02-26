@@ -4,7 +4,7 @@
  */
 package com.mycompany.lutendobakery;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  *
@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class ExpiryDate {
     private String batch;
-    private Date date;
+    private LocalDate date;
 
     public String getBatch() {
         return batch;
@@ -22,11 +22,11 @@ public class ExpiryDate {
         this.batch = batch;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }

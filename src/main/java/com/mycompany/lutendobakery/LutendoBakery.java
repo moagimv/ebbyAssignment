@@ -6,12 +6,9 @@ package com.mycompany.lutendobakery;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -50,20 +47,12 @@ public class LutendoBakery {
             batchdetails = name + " batch " + batchNumber;
             expiryDate.setBatch(batchdetails);
 
-            boolean correctDate = false;
-            do {
-                try {
-                    System.out.println("Please enter the expiry date in the format YYYY-MM-DD (eg: 2023-02-25)");
-                    String inputExpiryDate = in.nextLine();
-                    SimpleDateFormat sdfSource = new SimpleDateFormat("yyyy-MM-dd");
-                    Date theExpiryDate = sdfSource.parse(inputExpiryDate);
-                    expiryDate.setDate(theExpiryDate);
-                    correctDate = true;
-                } catch (ParseException ex) {
-                    System.out.println("You have entered and incorrect date formate.");
-                }
-            } while(correctDate = false);
-            
+            System.out.println("Please enter the number of days for the expiry date");
+            Long inputExpiryDate = in.nextLong();
+//                    SimpleDateFormat sdfSource = new SimpleDateFormat("yyyy-MM-dd");
+//                    Date theExpiryDate = sdfSource.parse(inputExpiryDate);
+            LocalDate theExpiryDate = LocalDate.now().plusDays(inputExpiryDate);
+            expiryDate.setDate(theExpiryDate);
             expDate.push(expiryDate);
 
             item = new Item();
@@ -80,7 +69,7 @@ public class LutendoBakery {
             if (sellNext == 1) {
                 counter++;
                 Item soldItem = salesProducts.deQueue();
-                if (soldItem.getExpiryDate().getDate().after(new Date())) {
+                if (soldItem.getExpiryDate().getDate().isAfter(LocalDate.now())) {
                     expStock.addItem(soldItem);
                 } else {
                     soldProducts.addItem(soldItem);
@@ -101,7 +90,10 @@ public class LutendoBakery {
                 ExpiryDate itemExpiryDate = foundItem.getExpiryDate();
                 if (expDate.findExpiryDate(itemExpiryDate) != null) {
                     expDate.removeExpiryDate(itemExpiryDate);
-                    itemExpiryDate.setDate(new Date());
+                    
+                    System.out.println("Please enter the number of days to the new expiry date");
+                    Long inputNewExpiryDate = in.nextLong();
+                    itemExpiryDate.setDate(LocalDate.now().plusDays(inputNewExpiryDate));
                     expDate.push(itemExpiryDate);
 
                     Item oldItem = foundItem;
@@ -131,7 +123,7 @@ public class LutendoBakery {
         //sell 4 batched
         for (int x = 0; x <= 4; x++) {
             Item soldItem = priorityProducts.deQueue();
-            if (soldItem.getExpiryDate().getDate().after(new Date())) {
+            if (soldItem.getExpiryDate().getDate().isAfter(LocalDate.now())) {
                 expStock.addItem(soldItem);
             } else {
                 soldProducts.addItem(soldItem);
