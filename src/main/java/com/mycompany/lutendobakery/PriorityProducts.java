@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class PriorityProducts {
 
-    private int size = 10;
+    private int size = 3;
     private Item items[] = new Item[size];
     private int front, rear;
     private ExpStock expStock = new ExpStock();
@@ -49,7 +49,7 @@ public class PriorityProducts {
                 front = 0;
             }
             rear++;
-            items[rear] = item;
+            items[items.length -1] = item;
             System.out.println("Inserted " + item.getName() + " on " + item.getBatch());
         }
     }
@@ -61,7 +61,7 @@ public class PriorityProducts {
             System.out.println("Queue is empty");
             return null;
         } else {
-            item = items[front];
+            item = items[items.length];
 
             if (front >= rear) {
                 front = -1;
@@ -111,7 +111,7 @@ public class PriorityProducts {
         } else {
             System.out.println("\nFront index-> " + front);
             System.out.println("Items -> ");
-            for (i = front; i <= rear; i++) {
+            for (i = front; i <= items.length - 1; i++) {
                 System.out.print(items[i].getName() + "  ");
                 System.out.print(items[i].getBatch() + "  ");
                 System.out.print(items[i].getExpiryDate().getDate() + "  \n");

@@ -4,10 +4,8 @@
  */
 package com.mycompany.lutendobakery;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -20,7 +18,7 @@ public class LutendoBakery {
 
         System.err.println("================ Begin ======================");
         System.err.println("==========Welcome to Lutendo's Bakery==========");
-        System.err.println("\n\\n\\n");
+        System.err.println("\n\n");
 
         Scanner in = new Scanner(System.in);
 
@@ -32,14 +30,16 @@ public class LutendoBakery {
 
         System.out.println("Please enter the product name");
         String name = in.nextLine();
-
+        
         int batchNumber;
         String batchdetails;
         ExpiryDate expiryDate;
         Item item;
 
+        System.err.println("\n\n");
+        System.err.println("============"+ name + " Product details Begins==============");
         //adding of items
-        for (int x = 0; x <= salesProducts.getSize(); x++) {
+        for (int x = 0; x <= salesProducts.getSize() - 1; x++) {
             System.out.println("Please enter the batch number");
             batchNumber = in.nextInt();
 
@@ -49,8 +49,6 @@ public class LutendoBakery {
 
             System.out.println("Please enter the number of days for the expiry date");
             Long inputExpiryDate = in.nextLong();
-//                    SimpleDateFormat sdfSource = new SimpleDateFormat("yyyy-MM-dd");
-//                    Date theExpiryDate = sdfSource.parse(inputExpiryDate);
             LocalDate theExpiryDate = LocalDate.now().plusDays(inputExpiryDate);
             expiryDate.setDate(theExpiryDate);
             expDate.push(expiryDate);
@@ -60,10 +58,18 @@ public class LutendoBakery {
             item.setBatch(batchdetails);
             item.setExpiryDate(expiryDate);
             salesProducts.enQueue(item);
-        } //selling of stock
+            
+            if(salesProducts.isFull()){
+                break;
+            }
+        } 
+
+        System.err.println("============"+ name + "Product details End==============");
+        System.err.println("\n\n");
+        //selling of stock
         int sellNext = 0;
         int counter = 0;
-        while (salesProducts.isFull()) {
+        while (!salesProducts.isEmpty()) {
             System.out.println("Do you wanna sell your " + name + ". Enter 1 for Yes and 0 for No");
             sellNext = in.nextInt();
             if (sellNext == 1) {
@@ -79,11 +85,11 @@ public class LutendoBakery {
                 break;
             }
         }
-        System.out.println(counter + name + " sold successfully");
+        System.out.println(counter + " " + name + " sold successfully");
 
-        System.out.println("\n\\n\\n\\n");
+        System.out.println("\n\n");
         //update the expiry dates of each product
-        System.out.println("Updating og expired products begins");
+        System.out.println("Updating of expired products begins");
         while (expDate.isFull()) {
             for (int x = 0; x <= salesProducts.getItems().length - 1; x++) {
                 Item foundItem = salesProducts.getItems()[x];
@@ -104,21 +110,27 @@ public class LutendoBakery {
         }
         System.out.println("Updating og expired products End");
 
-        System.out.println("\n\\n\\n\\n");
+        System.out.println("\n\n");
         System.out.println("Fetching priority products begins");
-        //priority products
-        for (int x = 0; x <= salesProducts.getSize(); x++) {
-            for (Item theItem : salesProducts.getLatestProducts()) {
-                priorityProducts.enQueue(theItem);
-            }
-        }
+//        //priority products
+//        for (int x = 0; x <= salesProducts.getSize(); x++) {
+            System.out.println("Sales Total" + salesProducts.getSize());
+            List<Item> theItems = salesProducts.getLatestProducts();
+            Item priorityItems[] = new Item[theItems.size()];
+            priorityItems = theItems.toArray(priorityItems);
+            priorityProducts.setItems(priorityItems);
+//                System.out.println("Latest Products Total" + salesProducts.getLatestProducts().size());
+//                System.out.println("Fetched Item " + theItem.getBatch());
+//                priorityProducts.setItems(items);
+//            
+//        }
         System.out.println("Fetching priority products ends");
 
-        System.out.println("\n\\n\\n\n");
+        System.out.println("\n\n");
         //display priority products
         priorityProducts.display();
 
-        System.out.println("\n\\n\\n\n");
+        System.out.println("\n\n");
         System.out.println("Selling 4 Priority Products Begins");
         //sell 4 batched
         for (int x = 0; x <= 4; x++) {
@@ -134,26 +146,26 @@ public class LutendoBakery {
         }
         System.out.println("Selling 4 Priority Products end");
 
-        System.out.println("\n\\n\\n\\n");
+        System.out.println("\n\n");
         //display elements of the priority products
         priorityProducts.display();
 
-        System.out.println("\n\\n\\n\\n");
+        System.out.println("\n\n");
         System.out.println("Restore remaining products begins");
         //restore remaining elements to sales products
         salesProducts.restoreProducts();
         salesProducts.setItems(priorityProducts.getItems());
         System.out.println("Restore remaining products end");
 
-        System.out.println("\n\\n\\n\\n Expiry Dates");
+        System.out.println("\n\n Expiry Dates");
         //display elements of expDate, expStock and soldProducts
         expDate.printStack();
-        System.out.println("\n\\n\\n\\n Expired Stock");
+        System.out.println("\n\n Expired Stock");
         expStock.displayExpireStock();
-        System.out.println("\n\\n\\n\\n Sold Products");
+        System.out.println("\n\n Sold Products");
         soldProducts.displaySoldProducts();
 
-        System.out.println("\n\\n\\n\\n");
+        System.out.println("\n\n");
         //print number of elements in expDate, expStock, soldProducts, priorityProducts, and salesProducts
         int totExpiryDates = expDate.getExpiryDates().length - 1;
         System.err.println("Total Expiery Dates: " + totExpiryDates);
@@ -164,7 +176,7 @@ public class LutendoBakery {
         int totSalesProducts = salesProducts.getItems().length - 1;
         System.err.println("Total Sales Products: " + totSalesProducts);
 
-        System.err.println("\n\\n\\n");
+        System.err.println("\n\n");
         System.err.println("=================== The End =====================");
     }
 }

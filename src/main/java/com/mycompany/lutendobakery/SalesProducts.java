@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class SalesProducts {
 
-    private int size = 10;
+    private int size = 3;
     private Item items[] = new Item[size];
     private int front, rear;
     private ExpStock expStock = new ExpStock();
@@ -61,29 +61,29 @@ public class SalesProducts {
             System.out.println("Queue is empty");
             return null;
         } else {
-            item = items[front];
-
+            //System.out.println("Found -> " + items.length + " Items to sell");
+            item = items[items.length - 1];
             if (front >= rear) {
                 front = -1;
                 rear = -1;
-            } /* Q has only one element, so we reset the queue after deleting it. */ else {
+            }/* Q has only one element, so we reset the queue after deleting it. */ 
+            else {
                 front++;
             }
-
+            removeItem(item);
             System.out.println("Deleted -> " + item.getBatch());
 
-            return (item);
+            return item;
         }
     }
 
-public void addItemToExpiredStock(Item item){
+    public void addItemToExpiredStock(Item item) {
         expStock.addItem(item);
     }
-    
-    public void addItemToSoldProducts(Item item){
+
+    public void addItemToSoldProducts(Item item) {
         soldProducts.addItem(item);
     }
-        
 
     public void updateQueue(Item oldItem, Item newItem) {
         if (isFull()) {
@@ -91,8 +91,8 @@ public void addItemToExpiredStock(Item item){
         } else {
             Item foundItem = findItem(oldItem);
             if (foundItem != null) {
-                removeItem(foundItem);             
-                
+                removeItem(foundItem);
+
                 if (front == -1) {
                     front = 0;
                 }
@@ -112,9 +112,9 @@ public void addItemToExpiredStock(Item item){
         } else {
             System.out.println("\nFront index-> " + front);
             System.out.println("Items -> ");
-            for (i = front; i <= rear; i++) {
+            for (i = front; i <= items.length - 1; i++) {
                 System.out.print(items[i].getName() + "  ");
-                System.out.print(items[i].getBatch()+ "  ");
+                System.out.print(items[i].getBatch() + "  ");
                 System.out.print(items[i].getExpiryDate().getDate() + "  \n");
             }
 
@@ -129,26 +129,26 @@ public void addItemToExpiredStock(Item item){
         }
         return null;
     }
-    
-    public void removeItem(Item item){
+
+    public void removeItem(Item item) {
         List<Item> itemsList = new ArrayList<>(Arrays.asList(items));
         itemsList.remove(item);
         items = itemsList.toArray(items);
     }
-    
-    public List<Item> getLatestProducts(){
+
+    public List<Item> getLatestProducts() {
         List<Item> latestProducts = new ArrayList<>();
-        
-        for(front = 0; front <= items.length - 1; front++){
+
+        for (front = 0; front <= items.length - 1; front++) {
             latestProducts.add(items[front]);
         }
-        
+
         front = 0;
-        
+
         return latestProducts;
     }
-    
-    public void restoreProducts(){
+
+    public void restoreProducts() {
         List<Item> itemsList = new ArrayList<>(Arrays.asList(items));
         itemsList.removeAll(Arrays.asList(items));
         items = itemsList.toArray(items);
